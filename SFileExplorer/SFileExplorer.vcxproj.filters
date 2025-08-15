@@ -15,12 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ExplorerMain.h">
+    <ClInclude Include="src\ExplorerMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UITitleBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ExplorerMain.cpp">
+    <ClCompile Include="src\ExplorerMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UITitleBar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

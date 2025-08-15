@@ -8,7 +8,11 @@ void Core::App::Init() {
 
 	m_window = MakeWindow(m_appName, 1280, 720);
 
-	m_imManager = std::make_unique<ImGuiManager>();
+	m_imManager = SetUPtr<ImGuiManager>();
+
+	UIManager::Init();
+
+	AppStart();
 }
 
 void Core::App::Run() {
@@ -16,6 +20,7 @@ void Core::App::Run() {
 		ImGuiManager::DrawBegin(m_clearColor);
 
 		AppUpdate();
+		UIManager::Update();
 
 		ImGuiManager::DrawEnd();
 
@@ -24,7 +29,9 @@ void Core::App::Run() {
 }
 
 void Core::App::Shutdown() {
+	AppEnd();
 
+	UIManager::Shutdown();
 }
 
 bool Core::App::IsRunning() {

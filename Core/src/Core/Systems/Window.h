@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+#include "Core/Core.h"
 
 namespace Core {
 
@@ -27,6 +27,6 @@ namespace Core {
 		int m_titleHeight = 40, m_controlWidth = 120;
 	};
 
-	std::unique_ptr<Window> MakeWindow(const char* title, int width, int height);
+	uPtr<Window> MakeWindow(const char* title, int width, int height);
 }
 

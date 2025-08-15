@@ -1,16 +1,16 @@
 #pragma once
 
-#include <memory>
-
-#include "Window.h"
-#include "ImGuiManager.h"
+#include "Core/Systems/Window.h"
+#include "Core/Systems/ImGuiManager.h"
+#include "Core/Systems/UIManager.h"
+#include "Core/Core.h"
 
 namespace Core {
 
 	class App {
 	public:
 		App(const char* name) : m_appName(name) {};
-		~App() = default;
+		virtual ~App() = default;
 
 		void Init();
 		virtual void AppStart() = 0;
@@ -32,10 +32,10 @@ namespace Core {
 		static App& Get();
 		
 	private:
-		std::unique_ptr<Window> m_window = nullptr;
-		std::unique_ptr<ImGuiManager> m_imManager = nullptr;
+		uPtr<Window> m_window = nullptr;
+		uPtr<ImGuiManager> m_imManager = nullptr;
 
-		glm::vec3 m_clearColor;
+		glm::vec3 m_clearColor = { 0.0f,0.0f,0.0f };
 
 		const char* m_appName;
 	};

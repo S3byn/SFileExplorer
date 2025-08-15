@@ -89,8 +89,8 @@ void Core::Window::SetTitleBarSize(int height, int controlWidth) {
 	s_controlWidth = m_controlWidth;
 }
 
-std::unique_ptr<Core::Window> Core::MakeWindow(const char* title, int width, int height) {
-	return std::make_unique<Core::Window>(title, width, height);
+Core::uPtr<Core::Window> Core::MakeWindow(const char* title, int width, int height) {
+	return SetUPtr<Core::Window>(title, width, height);
 }
 
 
