@@ -14,7 +14,10 @@
     <ClInclude Include="ExplorerMain.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ExplorerMain.cpp" />
+    <ClCompile Include="ExplorerMain.cpp">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.vcxproj">
@@ -22,6 +25,9 @@
     </ProjectReference>
     <ProjectReference Include="..\Dependencies\GLFW\GLFW.vcxproj">
       <Project>{c9e0ac46-93f5-415d-be80-ce9b28c8533e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Dependencies\GLM\GLM.vcxproj">
+      <Project>{ecbdf3c8-14ab-47f6-b249-007d03c12d95}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Dependencies\ImGui\ImGui.vcxproj">
       <Project>{f1bca77f-1937-4e27-9fba-d16428677a50}</Project>
@@ -75,7 +81,8 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\ImGui\src;$(SolutionDir)Core\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\ImGui\src;$(SolutionDir)Core\src;$(SolutionDir)Dependencies\GLM\src</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -91,10 +98,11 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\ImGui\src;$(SolutionDir)Core\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\ImGui\src;$(SolutionDir)Core\src;$(SolutionDir)Dependencies\GLM\src</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>

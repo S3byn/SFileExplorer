@@ -14,17 +14,22 @@
     <ProjectReference Include="..\Dependencies\GLFW\GLFW.vcxproj">
       <Project>{c9e0ac46-93f5-415d-be80-ce9b28c8533e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Dependencies\GLM\GLM.vcxproj">
+      <Project>{ecbdf3c8-14ab-47f6-b249-007d03c12d95}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Dependencies\ImGui\ImGui.vcxproj">
       <Project>{f1bca77f-1937-4e27-9fba-d16428677a50}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\Systems\ImGuiManager.h" />
     <ClInclude Include="src\Core\Systems\App.h" />
     <ClInclude Include="src\AppCore.h" />
     <ClInclude Include="src\Core\EntryPoint.h" />
     <ClInclude Include="src\Core\Systems\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\Systems\ImGuiManager.cpp" />
     <ClCompile Include="src\Core\Systems\App.cpp" />
     <ClCompile Include="src\Core\Systems\Window.cpp" />
   </ItemGroup>
@@ -76,12 +81,16 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\ImGui\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\ImGui\src;$(SolutionDir)Dependencies\GLM\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>dwmapi.lib; opengl32.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -92,12 +101,16 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\ImGui\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\ImGui\src;$(SolutionDir)Dependencies\GLM\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>dwmapi.lib; opengl32.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

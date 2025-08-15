@@ -18,12 +18,15 @@ namespace Core {
 
 		bool ShouldClose();
 
+		void SetTitleBarSize(int height, int controlWidth);
+
 	private:
 		void* m_handle = nullptr;
 
 		int m_width = 0, m_height = 0;
+		int m_titleHeight = 40, m_controlWidth = 120;
 	};
 
-	std::unique_ptr<Window> CreateWindow(const char* title, int width, int height);
+	std::unique_ptr<Window> MakeWindow(const char* title, int width, int height);
 }
 
