@@ -21,11 +21,12 @@ namespace Core {
 		}
 		
 		template <typename T>
-		static sPtr<UIComponent> GetComponent() {
+		static sPtr<T> GetComponent() {
 			auto it = Get().m_components.find(T::GetName());
 			if (it != Get().m_components.end()) {
-				return it->second;
+				return std::static_pointer_cast<T>(it->second);
 			}
+			return nullptr;
 		}
 
 		template <typename T>
@@ -38,7 +39,7 @@ namespace Core {
 		}
 
 		static void Init();
-		static void Update();
+		static void Update(float delta);
 		static void Shutdown();
 	private:
 		UIManager() {}

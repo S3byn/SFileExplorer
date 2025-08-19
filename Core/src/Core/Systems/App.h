@@ -4,6 +4,7 @@
 #include "Core/Systems/ImGuiManager.h"
 #include "Core/Systems/UIManager.h"
 #include "Core/Systems/AssetManager.h"
+#include "Core/Utilities/System.h"
 #include "Core/Core.h"
 
 namespace Core {
@@ -17,10 +18,12 @@ namespace Core {
 		virtual void AppStart() = 0;
 
 		void Run();
-		virtual void AppUpdate() = 0;
+		virtual void AppUpdate(float delta) = 0;
 
 		void Shutdown();
 		virtual void AppEnd() = 0;
+
+
 
 		bool IsRunning();
 
@@ -39,6 +42,9 @@ namespace Core {
 		glm::vec3 m_clearColor = { 0.0f,0.0f,0.0f };
 
 		const char* m_appName;
+
+		float m_deltaTime = 0.0f;
+		float m_lastFrame = 0.0f;
 	};
 
 	//Defined client-side 

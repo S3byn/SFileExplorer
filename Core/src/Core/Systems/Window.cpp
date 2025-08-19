@@ -70,10 +70,6 @@ Core::Window::Window(const char* title, int width, int height) : m_width(width),
 void Core::Window::Update() {
 	auto window = static_cast<GLFWwindow*>(m_handle);
 
-	int fbWidth, fbHeight;
-	glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
-	glViewport(0, 0, fbWidth, fbHeight);
-
 	glfwGetWindowSize(window, &m_width, &m_height);
 
 	glfwSwapBuffers(window);

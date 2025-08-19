@@ -28,6 +28,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\Utilities\Math.h" />
+    <ClInclude Include="src\Core\Utilities\ImGuiUtilities.h" />
     <ClInclude Include="src\Core\Systems\AssetManager.h" />
     <ClInclude Include="src\Core\Core.h" />
     <ClInclude Include="src\Core\Resources\Texture.h" />
@@ -38,14 +40,17 @@
     <ClInclude Include="src\Core\Systems\Window.h" />
     <ClInclude Include="src\Core\Resources\UIComponent.h" />
     <ClInclude Include="src\Core\Systems\UIManager.h" />
+    <ClInclude Include="src\Core\Utilities\System.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\Utilities\ImGuiUtilities.cpp" />
     <ClCompile Include="src\Core\Systems\AssetManager.cpp" />
     <ClCompile Include="src\Core\Resources\Texture.cpp" />
     <ClCompile Include="src\Core\Systems\ImGuiManager.cpp" />
     <ClCompile Include="src\Core\Systems\App.cpp" />
     <ClCompile Include="src\Core\Systems\Window.cpp" />
     <ClCompile Include="src\Core\Systems\UIManager.cpp" />
+    <ClCompile Include="src\Core\Utilities\System.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

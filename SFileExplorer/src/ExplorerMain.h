@@ -9,7 +9,7 @@ public:
 		App("SFileExplorer") { }
 
 	void AppStart() override;
-	void AppUpdate() override;
+	void AppUpdate(float delta) override;
 	void AppEnd() override;
 };
 

@@ -19,11 +19,15 @@ void Core::App::Init() {
 
 void Core::App::Run() {
 	while (IsRunning()) {
-		AppUpdate();
+		float currentFrame = (float)System::GetTime();
+		m_deltaTime = currentFrame - m_lastFrame;
+		m_lastFrame = currentFrame;
+
+		AppUpdate(m_deltaTime);
 
 		ImGuiManager::DrawBegin(m_clearColor);
 
-		UIManager::Update();
+		UIManager::Update(m_deltaTime);
 
 		AssetManager::Dispatch();
 

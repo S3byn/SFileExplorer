@@ -12,7 +12,7 @@ namespace Core {
 		virtual ~UIComponent() {}
 
 		virtual void Init() = 0;
-		virtual void Update() = 0;
+		virtual void Update(float delta) = 0;
 		virtual void Shutdown() = 0;
 	};
 

@@ -22,8 +22,6 @@ Core::ImGuiManager::ImGuiManager() {
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
-	ImGui::StyleColorsDark();
-
 	GLFWwindow* window = static_cast<GLFWwindow*>(App::GetWindow().GetHandle());
 
 	ImGui_ImplGlfw_InitForOpenGL(window, true);

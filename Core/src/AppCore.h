@@ -9,6 +9,10 @@
 #include "Core/Systems/AssetManager.h"
 #include "Core/Systems/App.h"
 
+#include "Core/Utilities/System.h"
+#include "Core/Utilities/Math.h"
+#include "Core/Utilities/ImGuiUtilities.h"
+
 #include "Core/Resources/Texture.h"
 #include "Core/Resources/UIComponent.h"
 

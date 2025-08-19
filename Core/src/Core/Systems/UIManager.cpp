@@ -7,9 +7,9 @@ void Core::UIManager::Init() {
 	if (!s_instance) s_instance = new UIManager;
 }
 
-void Core::UIManager::Update() {
+void Core::UIManager::Update(float delta) {
 	for (const auto& component : Get().m_components) {
-		component.second->Update();
+		component.second->Update(delta);
 	}
 }
 

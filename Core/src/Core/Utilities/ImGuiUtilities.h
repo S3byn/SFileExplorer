@@ -1,0 +1,38 @@
+#pragma once
+
+#include <glm/glm.hpp>
+#include <imgui.h>
+#include <Core/Core.h>
+#include <Core/Resources/Texture.h>
+
+namespace Core {
+	ImVec2 GLMToImVec(const glm::vec2& vec);
+	ImVec4 GLMToImVec(const glm::vec4& vec);
+
+	glm::vec2 ImVecToGLM(const ImVec2& vec);
+	glm::vec4 ImVecToGLM(const ImVec4& vec);
+	
+
+	namespace ImGuiXtra {
+
+		inline ImVec4 HexColor(uint32_t color) {
+			float r = ((color >> 24) & 0xFF) / 255.0f;
+			float g = ((color >> 16) & 0xFF) / 255.0f;
+			float b = ((color >> 8) & 0xFF) / 255.0f;
+			float a = (color & 0xFF) / 255.0f;
+			return { r, g, b, a };
+		}
+
+		inline ImVec4 HexColor(uint32_t color, float alpha) {
+			float r = ((color >> 16) & 0xFF) / 255.0f;
+			float g = ((color >> 8)  & 0xFF) / 255.0f;
+			float b = (color & 0xFF) / 255.0f;
+			return { r, g, b, alpha };
+		}
+
+		bool Button(const std::string& label, const glm::vec2& size, float deltaTime);
+
+		bool ImageButton(const std::string& label, Core::sPtr<Core::Texture> texture, float delta);
+
+	}
+}
