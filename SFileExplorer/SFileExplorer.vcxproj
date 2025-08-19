@@ -12,16 +12,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ExplorerMain.h" />
+    <ClInclude Include="src\Explorer\DirectoryUtils.h" />
     <ClInclude Include="src\UIComponents\UITitleBar.h" />
     <ClInclude Include="src\UIComponents\UIMenuBar.h" />
+    <ClInclude Include="src\UIComponents\UIMainView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ExplorerMain.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="src\Explorer\DirectoryUtils.cpp" />
     <ClCompile Include="src\UIComponents\UITitleBar.cpp" />
     <ClCompile Include="src\UIComponents\UIMenuBar.cpp" />
+    <ClCompile Include="src\UIComponents\UIMainView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.vcxproj">

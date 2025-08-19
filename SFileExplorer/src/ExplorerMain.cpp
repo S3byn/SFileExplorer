@@ -2,6 +2,7 @@
 
 #include "UIComponents/UITitleBar.h"
 #include "UIComponents/UIMenuBar.h"
+#include "UIComponents/UIMainView.h"
 
 void ExplorerApp::AppStart() {
 	//Get IO
@@ -17,8 +18,9 @@ static float posX = 0.0f;
 	
 	Core::AssetManager::LoadTexturesInPath("Assets/Textures");
 
-	Core::UIManager::AddComponent<UIMenuBar>();
 	Core::UIManager::AddComponent<UITitleBar>();
+	Core::UIManager::AddComponent<UIMenuBar>();
+	Core::UIManager::AddComponent<UIMainView>();
 }
 
 

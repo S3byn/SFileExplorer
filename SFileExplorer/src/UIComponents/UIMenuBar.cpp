@@ -26,8 +26,8 @@ void UIMenuBar::Update(float delta) {
 
 	// Set Button Colors
 	ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 0.0f });
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1.0f, 1.0f, 1.0f, 0.2f });
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 1.0f, 1.0f, 1.0f, 0.4f });
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Core::ImGuiXtra::HexColor(0xBA9EFF, 0.2f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, Core::ImGuiXtra::HexColor(0xBA9EFF, 0.4f));
 	ImGui::PushStyleColor(ImGuiCol_FrameBg, Core::ImGuiXtra::HexColor(0x4E4182, 1.0f));
 
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 2.0f, 0.0f });

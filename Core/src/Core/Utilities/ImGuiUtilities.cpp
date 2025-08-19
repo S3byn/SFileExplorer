@@ -76,7 +76,7 @@ bool Core::ImGuiXtra::Button(const std::string& label, const glm::vec2& size, fl
 	return clicked;
 }
 
-bool Core::ImGuiXtra::ImageButton(const std::string& label, Core::sPtr<Core::Texture> texture, float delta) {
+bool Core::ImGuiXtra::ImageButton(const std::string& label, const Core::sPtr<Core::Texture>& texture, float delta) {
 	bool result = Button(("##" + label).c_str(), {(float)texture->width, (float)texture->height}, delta);
 
 	ImGui::SameLine();
@@ -85,3 +85,6 @@ bool Core::ImGuiXtra::ImageButton(const std::string& label, Core::sPtr<Core::Tex
 	return result;
 }
 
+void Core::ImGuiXtra::Image(const Core::sPtr<Core::Texture>& texture) {
+	ImGui::Image((ImTextureID)texture->id, {(float)texture->width, (float)texture->height});
+}

@@ -32,7 +32,9 @@ namespace Core {
 
 		bool Button(const std::string& label, const glm::vec2& size, float deltaTime);
 
-		bool ImageButton(const std::string& label, Core::sPtr<Core::Texture> texture, float delta);
+		bool ImageButton(const std::string& label, const Core::sPtr<Core::Texture>& texture, float delta);
+
+		void Image(const Core::sPtr<Core::Texture>& texture);
 
 	}
 }
