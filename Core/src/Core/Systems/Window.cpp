@@ -1,20 +1,25 @@
 #include "Window.h"
 
+// Window API Includes
+#include <Windowsx.h>
+#include <dwmapi.h>
+
+//Open GL
+#include <glad/glad.h>
+
 // GLFW includes and configuration
 #define GLFW_EXPOSE_NATIVE_WIN32
 #define GLFW_EXPOSE_NATIVE_WGL
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 
-// Window API Includes
-#include <Windowsx.h>
-#include <dwmapi.h>
-
 #include "Core/Systems/App.h"
 
 // Define statics for class
 static bool s_glfwInit = false;
 static int s_titleHeight, s_controlWidth;
+
+static HWND s_hwnd;
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -37,25 +42,29 @@ Core::Window::Window(const char* title, int width, int height) : m_width(width),
 	glfwMakeContextCurrent(window);
 
 	// Get native handle for window customization
-	HWND hwnd = glfwGetWin32Window(window);
+	s_hwnd = glfwGetWin32Window(window);
 
 	// Store original GLFW WinProc
-	LONG_PTR originalProc = GetWindowLongPtr(hwnd, GWLP_WNDPROC);
-	SetWindowLongPtr(hwnd, GWLP_USERDATA, originalProc);
-	SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(WinProc));
+	LONG_PTR originalProc = GetWindowLongPtr(s_hwnd, GWLP_WNDPROC);
+	SetWindowLongPtr(s_hwnd, GWLP_USERDATA, originalProc);
+	SetWindowLongPtr(s_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(WinProc));
 
-	LONG style = GetWindowLong(hwnd, GWL_STYLE);
+	LONG style = GetWindowLong(s_hwnd, GWL_STYLE);
 	//style &= ~(WS_CAPTION);
-	SetWindowLong(hwnd, GWL_STYLE, style);
+	SetWindowLong(s_hwnd, GWL_STYLE, style);
 
 	MARGINS margins = { 0, 0, 0, 0 };
-	DwmExtendFrameIntoClientArea(hwnd, &margins);
+	DwmExtendFrameIntoClientArea(s_hwnd, &margins);
 
-	SetWindowPos(hwnd, NULL, 0,0,0,0,
+	SetWindowPos(s_hwnd, NULL, 0,0,0,0,
 		SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED); 
 
 	//Set window to vsync
 	glfwSwapInterval(1);
+
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+		// Handle error
+	}
 }
 
 void Core::Window::Update() {
@@ -72,17 +81,13 @@ void Core::Window::Update() {
 }
 
 void Core::Window::Minimize() {
-	HWND hwnd = glfwGetWin32Window( static_cast<GLFWwindow*>(m_handle));
-
-	ShowWindow(hwnd, SW_MINIMIZE);
+	ShowWindow(s_hwnd, SW_MINIMIZE);
 }
 
 void Core::Window::Maximize() {
-	HWND hwnd = glfwGetWin32Window( static_cast<GLFWwindow*>(m_handle));
-
 	WINDOWPLACEMENT wp = { sizeof(wp) };
-	GetWindowPlacement(hwnd, &wp);
-	ShowWindow(hwnd, wp.showCmd == SW_SHOWMAXIMIZED ? SW_RESTORE : SW_MAXIMIZE);
+	GetWindowPlacement(s_hwnd, &wp);
+	ShowWindow(s_hwnd, wp.showCmd == SW_SHOWMAXIMIZED ? SW_RESTORE : SW_MAXIMIZE);
 }
 
 void Core::Window::Close() {
@@ -110,11 +115,19 @@ Core::uPtr<Core::Window> Core::MakeWindow(const char* title, int width, int heig
 	return SetUPtr<Core::Window>(title, width, height);
 }
 
+bool Core::Window::GetMaximized() {
+	return IsMaximized(s_hwnd);
+}
+
 LRESULT CALLBACK WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 		
 		case WM_NCCALCSIZE: {
 			if (wParam == TRUE) {
+				// Call the original window procedure to get default layout
+				WNDPROC originalProc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+				LRESULT res = CallWindowProc(originalProc, hWnd, msg, wParam, lParam);
+
 				// Detect if window is maximized
 				WINDOWPLACEMENT wp = { sizeof(WINDOWPLACEMENT) };
 				GetWindowPlacement(hWnd, &wp);
@@ -124,7 +137,7 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				int topOffset = GetSystemMetrics(SM_CYCAPTION);
 					
 				if (!isMaximized) {
-					topOffset += GetSystemMetrics(SM_CYFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER);
+					topOffset += (GetSystemMetrics(SM_CYFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER) - 1);
 				}
 
 				NCCALCSIZE_PARAMS* sz = reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
@@ -167,14 +180,17 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			if (pt.y < s_titleHeight && pt.x < rect.right - s_controlWidth) return HTCAPTION;
 
 			return HTCLIENT;
+			break;
 		}
 		case WM_DESTROY:
 			PostQuitMessage(0);
-		return 0;
+			return 0;
+		break;
 
 		default: {
 			auto originalProc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 			return CallWindowProc(originalProc, hWnd, msg, wParam, lParam);
 		}
 	}
+	return 0;
 }

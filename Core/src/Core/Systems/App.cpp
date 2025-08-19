@@ -10,6 +10,8 @@ void Core::App::Init() {
 
 	m_imManager = SetUPtr<ImGuiManager>();
 
+	AssetManager::Init();
+
 	UIManager::Init();
 
 	AppStart();
@@ -23,6 +25,8 @@ void Core::App::Run() {
 
 		UIManager::Update();
 
+		AssetManager::Dispatch();
+
 		ImGuiManager::DrawEnd();
 
 		m_window->Update();
@@ -33,6 +37,8 @@ void Core::App::Shutdown() {
 	AppEnd();
 
 	UIManager::Shutdown();
+
+	AssetManager::Shutdown();
 }
 
 bool Core::App::IsRunning() {

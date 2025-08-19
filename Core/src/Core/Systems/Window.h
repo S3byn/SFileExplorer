@@ -26,6 +26,8 @@ namespace Core {
 		int GetTitleBarHeight() const { return m_titleHeight; }
 		int GetTitleBarControlWidth() const { return m_controlWidth; }
 
+		bool GetMaximized();
+
 	private:
 		void* m_handle = nullptr;
 

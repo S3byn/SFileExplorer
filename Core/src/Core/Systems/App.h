@@ -3,6 +3,7 @@
 #include "Core/Systems/Window.h"
 #include "Core/Systems/ImGuiManager.h"
 #include "Core/Systems/UIManager.h"
+#include "Core/Systems/AssetManager.h"
 #include "Core/Core.h"
 
 namespace Core {

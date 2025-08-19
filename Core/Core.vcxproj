@@ -11,6 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dependencies\GLAD\GLAD.vcxproj">
+      <Project>{7065e225-762b-476f-9321-4bef71d00102}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Dependencies\GLFW\GLFW.vcxproj">
       <Project>{c9e0ac46-93f5-415d-be80-ce9b28c8533e}</Project>
     </ProjectReference>
@@ -20,9 +23,14 @@
     <ProjectReference Include="..\Dependencies\ImGui\ImGui.vcxproj">
       <Project>{f1bca77f-1937-4e27-9fba-d16428677a50}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Dependencies\STB_IMAGE\STB_IMAGE.vcxproj">
+      <Project>{83a8db4d-3195-4248-9f10-ec07169c0f93}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\Systems\AssetManager.h" />
     <ClInclude Include="src\Core\Core.h" />
+    <ClInclude Include="src\Core\Resources\Texture.h" />
     <ClInclude Include="src\Core\Systems\ImGuiManager.h" />
     <ClInclude Include="src\Core\Systems\App.h" />
     <ClInclude Include="src\AppCore.h" />
@@ -32,6 +40,8 @@
     <ClInclude Include="src\Core\Systems\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\Systems\AssetManager.cpp" />
+    <ClCompile Include="src\Core\Resources\Texture.cpp" />
     <ClCompile Include="src\Core\Systems\ImGuiManager.cpp" />
     <ClCompile Include="src\Core\Systems\App.cpp" />
     <ClCompile Include="src\Core\Systems\Window.cpp" />
@@ -85,7 +95,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\ImGui\src;$(SolutionDir)Dependencies\GLM\src;$(SolutionDir)Core\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Dependencies\ImGui\src;$(SolutionDir)Dependencies\GLM\src;$(SolutionDir)Core\src;$(SolutionDir)Dependencies\STB_IMAGE</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -105,7 +115,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\ImGui\src;$(SolutionDir)Dependencies\GLM\src;$(SolutionDir)Core\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Dependencies\ImGui\src;$(SolutionDir)Dependencies\GLM\src;$(SolutionDir)Core\src;$(SolutionDir)Dependencies\STB_IMAGE</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
