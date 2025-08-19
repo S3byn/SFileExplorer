@@ -10,6 +10,8 @@
 #include <Windowsx.h>
 #include <dwmapi.h>
 
+#include "Core/Systems/App.h"
+
 // Define statics for class
 static bool s_glfwInit = false;
 static int s_titleHeight, s_controlWidth;
@@ -42,34 +44,49 @@ Core::Window::Window(const char* title, int width, int height) : m_width(width),
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, originalProc);
 	SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(WinProc));
 
-	// Remove title bar but keep resizable border
-	LONG_PTR style = GetWindowLongPtr(hwnd, GWL_STYLE);
-	style &= ~(WS_CAPTION | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
-	SetWindowLongPtr(hwnd, GWL_STYLE, style);
+	LONG style = GetWindowLong(hwnd, GWL_STYLE);
+	//style &= ~(WS_CAPTION);
+	SetWindowLong(hwnd, GWL_STYLE, style);
 
-	LONG_PTR exStyle = GetWindowLongPtr(hwnd, GWL_EXSTYLE);
-	exStyle &= ~(WS_EX_CLIENTEDGE | WS_EX_STATICEDGE | WS_EX_DLGMODALFRAME);
-	SetWindowLongPtr(hwnd, GWL_EXSTYLE, exStyle);
-
-	// Rounded corners (Windows 11)
-	int preference = 2; // DWMWCP_ROUND
-	DwmSetWindowAttribute(hwnd, 33, &preference, sizeof(preference));
-
-	// No glass extension
 	MARGINS margins = { 0, 0, 0, 0 };
 	DwmExtendFrameIntoClientArea(hwnd, &margins);
 
-	// Force style update
-	SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
-		SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+	SetWindowPos(hwnd, NULL, 0,0,0,0,
+		SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED); 
 
 	//Set window to vsync
 	glfwSwapInterval(1);
 }
 
 void Core::Window::Update() {
-	glfwSwapBuffers(static_cast<GLFWwindow*>(m_handle));
+	auto window = static_cast<GLFWwindow*>(m_handle);
+
+	int fbWidth, fbHeight;
+	glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+	glViewport(0, 0, fbWidth, fbHeight);
+
+	glfwGetWindowSize(window, &m_width, &m_height);
+
+	glfwSwapBuffers(window);
 	glfwPollEvents();
+}
+
+void Core::Window::Minimize() {
+	HWND hwnd = glfwGetWin32Window( static_cast<GLFWwindow*>(m_handle));
+
+	ShowWindow(hwnd, SW_MINIMIZE);
+}
+
+void Core::Window::Maximize() {
+	HWND hwnd = glfwGetWin32Window( static_cast<GLFWwindow*>(m_handle));
+
+	WINDOWPLACEMENT wp = { sizeof(wp) };
+	GetWindowPlacement(hwnd, &wp);
+	ShowWindow(hwnd, wp.showCmd == SW_SHOWMAXIMIZED ? SW_RESTORE : SW_MAXIMIZE);
+}
+
+void Core::Window::Close() {
+	PostQuitMessage(0);
 }
 
 Core::Window::~Window() {
@@ -93,9 +110,33 @@ Core::uPtr<Core::Window> Core::MakeWindow(const char* title, int width, int heig
 	return SetUPtr<Core::Window>(title, width, height);
 }
 
-
 LRESULT CALLBACK WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
+		
+		case WM_NCCALCSIZE: {
+			if (wParam == TRUE) {
+				// Detect if window is maximized
+				WINDOWPLACEMENT wp = { sizeof(WINDOWPLACEMENT) };
+				GetWindowPlacement(hWnd, &wp);
+				const bool isMaximized = (wp.showCmd == SW_SHOWMAXIMIZED);
+
+				// Adjust the top margin manually
+				int topOffset = GetSystemMetrics(SM_CYCAPTION);
+					
+				if (!isMaximized) {
+					topOffset += GetSystemMetrics(SM_CYFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER);
+				}
+
+				NCCALCSIZE_PARAMS* sz = reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
+				
+
+				sz->rgrc[0].top -= topOffset;
+
+				return 0;
+			}
+			break;
+		}
+
 		case WM_NCHITTEST: {
 			POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 			ScreenToClient(hWnd, &pt);
@@ -127,7 +168,6 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
 			return HTCLIENT;
 		}
-
 		case WM_DESTROY:
 			PostQuitMessage(0);
 		return 0;

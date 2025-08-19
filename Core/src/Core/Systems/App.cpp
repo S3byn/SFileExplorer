@@ -17,9 +17,10 @@ void Core::App::Init() {
 
 void Core::App::Run() {
 	while (IsRunning()) {
+		AppUpdate();
+
 		ImGuiManager::DrawBegin(m_clearColor);
 
-		AppUpdate();
 		UIManager::Update();
 
 		ImGuiManager::DrawEnd();

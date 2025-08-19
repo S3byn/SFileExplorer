@@ -5,8 +5,17 @@
 #include <GLFW/glfw3.h>
 
 #include "Core/Systems/App.h"
+#include <unordered_map>
+
+static Core::ImGuiManager* s_manager = nullptr;
+
+static std::unordered_map<std::string, int> s_loadedFonts;
+static int s_currentIndex = 0;
+
 
 Core::ImGuiManager::ImGuiManager() {
+	if (!s_manager) s_manager = this;
+
 	IMGUI_CHECKVERSION();
 
 	ImGui::CreateContext();
@@ -45,4 +54,21 @@ void Core::ImGuiManager::DrawEnd() {
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void Core::ImGuiManager::AddFont(const std::string& name, float size, const std::filesystem::path& filePath, bool setDefault) {
+	ImGuiIO& io = ImGui::GetIO();
+	auto font = io.Fonts->AddFontFromFileTTF(filePath.string().c_str(), size);
+
+	s_loadedFonts.insert({name, s_currentIndex});
+	s_currentIndex++;
+
+	if (setDefault) {
+		io.FontDefault = font;
+	}
+}
+
+ImFont* Core::ImGuiManager::GetFont(const std::string& name) {
+	ImGuiIO& io = ImGui::GetIO();
+	return io.Fonts->Fonts[s_loadedFonts[name]];
 }

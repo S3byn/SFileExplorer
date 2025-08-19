@@ -18,7 +18,13 @@ namespace Core {
 
 		bool ShouldClose();
 
+		void Maximize();
+		void Minimize();
+		void Close();
+
 		void SetTitleBarSize(int height, int controlWidth);
+		int GetTitleBarHeight() const { return m_titleHeight; }
+		int GetTitleBarControlWidth() const { return m_controlWidth; }
 
 	private:
 		void* m_handle = nullptr;
