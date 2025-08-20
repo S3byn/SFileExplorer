@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="src\ExplorerMain.h" />
     <ClInclude Include="src\Explorer\DirectoryUtils.h" />
+    <ClInclude Include="src\UIComponents\UIQuickAccess.h" />
     <ClInclude Include="src\UIComponents\UITitleBar.h" />
     <ClInclude Include="src\UIComponents\UIMenuBar.h" />
     <ClInclude Include="src\UIComponents\UIMainView.h" />
@@ -23,6 +24,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="src\Explorer\DirectoryUtils.cpp" />
+    <ClCompile Include="src\UIComponents\UIQuickAccess.cpp" />
     <ClCompile Include="src\UIComponents\UITitleBar.cpp" />
     <ClCompile Include="src\UIComponents\UIMenuBar.cpp" />
     <ClCompile Include="src\UIComponents\UIMainView.cpp" />

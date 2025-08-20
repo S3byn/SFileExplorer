@@ -1,4 +1,7 @@
 #include "UIMenuBar.h"
+#include "UIMainView.h"
+
+#include <iostream>
 
 static Core::Window* s_window;
 
@@ -8,6 +11,8 @@ static Core::sPtr<Core::Texture> s_undoIcon;
 static Core::sPtr<Core::Texture> s_redoIcon;
 static Core::sPtr<Core::Texture> s_prevIcon;
 static Core::sPtr<Core::Texture> s_refreshIcon;
+
+extern bool g_updateFiles;
 
 void UIMenuBar::Init() {
 	s_window = &Core::App::GetWindow();
@@ -37,10 +42,11 @@ void UIMenuBar::Update(float delta) {
 	// Set Create Menu bar window
 	ImGui::SetNextWindowPos({ -1.0f, (float)s_window->GetTitleBarHeight() - 1.0f });
 	ImGui::SetNextWindowSize({ (float)s_window->GetWidth() + 2, menuBarHeight });
-	ImGui::Begin(UIMenuBar::GetName().c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
+	Core::ImGuiXtra::Window menuBar(UIMenuBar::GetName().c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
 	
 	ImGui::SetCursorPos({ 2.0f, 0.0f });
 
+	auto& files = Core::UIManager::GetComponent<UIMainView>()->files;
 	// Menu Icon
 	if (Core::ImGuiXtra::ImageButton("Menu Icon", s_menuIcon, delta)) {
 		// Do nothing for now
@@ -61,7 +67,18 @@ void UIMenuBar::Update(float delta) {
 
 	// Prev Icon
 	if (Core::ImGuiXtra::ImageButton("Prev Icon", s_prevIcon, delta)) {
-		// Do nothing for now
+		
+		auto path = files->path.lexically_normal();
+
+		if (!path.has_filename() && path.has_parent_path()) {
+			path = path.parent_path();
+		}
+		else if (path.has_filename()) {
+			path = path.parent_path();
+		}
+		
+		files->path = path;
+		g_updateFiles = true;
 	}
 	ImGui::SameLine();
 
@@ -80,26 +97,34 @@ void UIMenuBar::Update(float delta) {
 	ImGui::SetCursorPos({ImGui::GetCursorPosX() + 2.0f, 5.0f});
 	ImGui::SetNextItemWidth(s_window->GetWidth() - ImGui::GetCursorPosX() - searchBarWidth - ImGui::GetStyle().ItemSpacing.x * 2.0f);
 	if (ImGui::InputText("##Directory", directoryBuffer, IM_ARRAYSIZE(directoryBuffer), ImGuiInputTextFlags_EnterReturnsTrue)) {
-		// Do nothing for now
+		Explorer::Path currentEvaluatedPath = directoryBuffer;
+		if (Explorer::IsDirectory(currentEvaluatedPath)) {
+			files->path = currentEvaluatedPath;
+			g_updateFiles = true;
+		}
+		else {
+			strcpy_s(directoryBuffer, sizeof(directoryBuffer), files->path.string().c_str());
+		}
+	}
+	if (ImGui::IsItemHovered()) {
+		Core::System::SetCursor(Core::Cursor::Text);
 	}
 
 	ImGui::SameLine();
 		
-	std::string searchHint = "Search";
+	std::string searchHint = "Search " + files->path.filename().string();
 
 	ImGui::SetCursorPos({ImGui::GetCursorPosX() + 2.0f, 5.0f});
 	ImGui::SetNextItemWidth(searchBarWidth - ImGui::GetStyle().ItemSpacing.x);
 	if (ImGui::InputTextWithHint("##Search", searchHint.c_str(), searchBuffer, IM_ARRAYSIZE(searchBuffer), ImGuiInputTextFlags_EnterReturnsTrue)) {
 		// Do nothing for now
 	}
+	if (ImGui::IsItemHovered()) {
+		Core::System::SetCursor(Core::Cursor::Text);
+	}
 
-	ImGui::PopStyleVar();
-	ImGui::PopStyleColor();
-
-	ImGui::End();
-
-	ImGui::PopStyleColor(6);
-	ImGui::PopStyleVar(3);
+	ImGui::PopStyleColor(7);
+	ImGui::PopStyleVar(4);
 }
 
 void UIMenuBar::Shutdown() {

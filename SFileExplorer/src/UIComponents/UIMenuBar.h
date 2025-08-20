@@ -7,11 +7,11 @@ public:
 	void Update(float delta) override;
 	void Shutdown() override;
 
-	REGISTER_COMPONENT(UIMenuBar)
-public:
 	float menuBarHeight = 33.0f;
 	char directoryBuffer[256] = "";
 	char searchBuffer[96] = "";
+
+	REGISTER_COMPONENT(UIMenuBar)
 };
 
 

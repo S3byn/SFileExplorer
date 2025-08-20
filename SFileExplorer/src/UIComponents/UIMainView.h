@@ -8,11 +8,9 @@ public:
 	void Update(float delta) override;
 	void Shutdown() override;
 	
-	REGISTER_COMPONENT(UIMainView)
-
 	Core::sPtr<Explorer::Directory> files;
-	Explorer::Path currentDirectory = "C:\\";
-	
 	int mainMenuIndex = -1;
+
+	REGISTER_COMPONENT(UIMainView)
 };
 

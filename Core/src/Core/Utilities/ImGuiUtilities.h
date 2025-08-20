@@ -15,6 +15,16 @@ namespace Core {
 
 	namespace ImGuiXtra {
 
+		class Window {
+		public:
+			Window(const char* label, bool* show = (bool*)0, ImGuiWindowFlags flags = 0) {
+				ImGui::Begin(label, show, flags);
+			}
+			~Window() {
+				ImGui::End();
+			}
+		};
+
 		inline ImVec4 HexColor(uint32_t color) {
 			float r = ((color >> 24) & 0xFF) / 255.0f;
 			float g = ((color >> 16) & 0xFF) / 255.0f;

@@ -30,6 +30,9 @@
     <ClInclude Include="src\Explorer\DirectoryUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\UIComponents\UIQuickAccess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ExplorerMain.cpp">
@@ -45,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Explorer\DirectoryUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIComponents\UIQuickAccess.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

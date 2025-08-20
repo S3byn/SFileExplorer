@@ -37,7 +37,7 @@ void UITitleBar::Update(float delta) {
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0.0f, 0.0f });
 	ImGui::SetNextWindowPos({-1,-1});
 	ImGui::SetNextWindowSize({ (float)s_window->GetWidth() + 2.0f, (float)s_window->GetTitleBarHeight() + 1.0f });
-	ImGui::Begin(UITitleBar::GetName().c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
+	Core::ImGuiXtra::Window titlebar(UITitleBar::GetName().c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
 	
 	// Draw App Icon
 	ImGui::SetCursorPos({ 0.0f, 0.0f });
@@ -78,14 +78,9 @@ void UITitleBar::Update(float delta) {
 		s_window->Close();
 	}
 
-	// Reset button colors
-	ImGui::PopStyleColor(3);
-	ImGui::PopStyleVar(2);
-
 	// End and reset window
-	ImGui::End();
-	ImGui::PopStyleColor(4);
-	ImGui::PopStyleVar();
+	ImGui::PopStyleColor(7);
+	ImGui::PopStyleVar(3);
 }
 
 void UITitleBar::Shutdown() {

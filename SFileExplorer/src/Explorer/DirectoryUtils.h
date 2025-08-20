@@ -11,26 +11,26 @@ namespace Explorer {
 		bool isDirectory;
 	};
 
-	bool IsDirectory(Path path);
+	bool IsDirectory(const Path& path);
+
+	void OpenFile(const Path& path);
 
 	class Directory {
 	public:
 		Directory(const Path& path);
 		~Directory();
 
-		void ReloadDirectory(const Path& path);
+		void Reload();
 		
-		const Path& GetPath() const { return m_path; }
-
 		std::vector<File>::iterator begin() { return m_files.begin(); }
 		std::vector<File>::iterator end() { return m_files.end(); }
 
 		std::vector<File>::const_iterator begin() const { return m_files.begin(); }
 		std::vector<File>::const_iterator end() const { return m_files.end(); }
 		
+		Path path;
 	private:
 		std::vector<File> m_files;
-		Path m_path;
 	};
 
 
