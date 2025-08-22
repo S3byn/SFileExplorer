@@ -1,6 +1,8 @@
 #include "DirectoryUtils.h"
-#include <Windows.h>
-
+#include <windows.h>
+#include <shlwapi.h>
+#include <shellapi.h>
+#include <shlobj.h>
 std::string WideToUTF8(const std::wstring& wstr) {
 	if (wstr.empty()) return {};
 
@@ -95,6 +97,17 @@ void Explorer::OpenFile(const Explorer::Path& path) {
 
 	}
 }
+
+Explorer::Path Explorer::GetUserDirectory() {
+	PWSTR widePath = nullptr;
+	if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Profile, 0, nullptr, &widePath))) {
+		std::filesystem::path userDir(widePath); // Safe conversion
+		CoTaskMemFree(widePath);
+		return userDir;
+	}
+	return {};
+}
+
 
 Explorer::Directory::Directory(const Explorer::Path& path) : path(path) {
 	for (const auto& entry : std::filesystem::directory_iterator(path)) {

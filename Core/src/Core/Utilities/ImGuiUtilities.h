@@ -45,7 +45,7 @@ namespace Core {
 
 		bool ImageButton(const std::string& label, const Core::sPtr<Core::Texture>& texture, float delta);
 
-		void Image(const Core::sPtr<Core::Texture>& texture);
+		void Image(const Core::sPtr<Core::Texture>& texture, const::glm::vec2& size = { 0.0f, 0.0f });
 
 	}
 }

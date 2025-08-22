@@ -54,6 +54,7 @@ void UIMainView::Update(float delta) {
 	ImGui::PushStyleColor(ImGuiCol_HeaderActive, {0,0,0,0});
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 2.0f, 2.0f });
+	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 0.0f, 0.0f });
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.0f);
 
 	// Create window
@@ -61,12 +62,18 @@ void UIMainView::Update(float delta) {
 	ImGui::SetNextWindowSize({(float)s_window->GetWidth() - (float)*s_quickAccessWidth + 1.0f, (float)s_window->GetHeight() - s_mainViewOffset + 1.0f});
 	Core::ImGuiXtra::Window mainView(UIMainView::GetName().c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 	
+	//Render Shadow
+	auto shadow = Core::AssetManager::GetTexture("shadow.png");
+	Core::ImGuiXtra::Image(shadow, { ImGui::GetWindowWidth(), shadow->height });
+	ImGui::SetCursorPos({ 0.0f, 0.0f });
+
+	ImGuiTableFlags flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_NoBordersInBody;
 	// Create table header for files
-	ImGui::BeginTable("FileTable", 4, ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_NoBordersInBody);
-	ImGui::TableSetupColumn("Name");
-	ImGui::TableSetupColumn("Type");
-	ImGui::TableSetupColumn("Created Time");
-	ImGui::TableSetupColumn("Size");
+	ImGui::BeginTable("FileTable", 4, flags);
+	ImGui::TableSetupColumn(" Name");
+	ImGui::TableSetupColumn(" Type");
+	ImGui::TableSetupColumn(" Created Time");
+	ImGui::TableSetupColumn(" Size");
 	
 	ImGui::TableHeadersRow();
 
@@ -154,14 +161,14 @@ void UIMainView::Update(float delta) {
 
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(s_columnPosition[1]);
-		std::string fileYypeDesc = Core::ClipTextToWidth(file.typeDesc, s_columnsWidth[1] - s_padding);
-		ImGui::Text(fileYypeDesc.c_str());
+		std::string fileTypeDesc = " " + Core::ClipTextToWidth(file.typeDesc, s_columnsWidth[1] - s_padding);
+		ImGui::Text(fileTypeDesc.c_str());
 
 		i++;
 	}
 	
 	ImGui::PopStyleColor(8);
-	ImGui::PopStyleVar(2);
+	ImGui::PopStyleVar(3);
 }
 
 void UIMainView::Shutdown() {

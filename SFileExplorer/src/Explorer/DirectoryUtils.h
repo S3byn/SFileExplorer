@@ -3,8 +3,10 @@
 #include <vector>
 
 namespace Explorer {
+	// Alias for std::filesytem::path
 	using Path = std::filesystem::path;
 
+	// Basic File data structure
 	struct File {
 		Path path;
 		std::string name;
@@ -17,6 +19,9 @@ namespace Explorer {
 
 	void OpenFile(const Path& path);
 
+	Path GetUserDirectory();
+
+	// Directory organization stuff
 	enum class SortType {
 		Alpha, ReverseAlpha
 	};

@@ -106,6 +106,11 @@ bool Core::ImGuiXtra::ImageButton(const std::string& label, const Core::sPtr<Cor
 	return result;
 }
 
-void Core::ImGuiXtra::Image(const Core::sPtr<Core::Texture>& texture) {
-	ImGui::Image((ImTextureID)texture->id, {(float)texture->width, (float)texture->height});
+void Core::ImGuiXtra::Image(const Core::sPtr<Core::Texture>& texture, const glm::vec2& size) {
+	if (size == glm::vec2(0.0f, 0.0f)) {
+		ImGui::Image((ImTextureID)texture->id, {(float)texture->width, (float)texture->height});
+	}
+	else {
+		ImGui::Image((ImTextureID)texture->id, { size.x, size.y });
+	}
 }
