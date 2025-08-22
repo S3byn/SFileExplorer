@@ -19,6 +19,27 @@ glm::vec4 Core::ImVecToGLM(const ImVec4& vec) {
 	return { vec.x, vec.y, vec.z, vec.w };
 }
 
+std::string Core::ClipTextToWidth(const std::string& text, float maxWidth, const char* ellipsis) {
+	const ImVec2 ellipsisSize = ImGui::CalcTextSize(ellipsis);
+	const float availableWidth = maxWidth - ellipsisSize.x;
+
+	size_t clippedLen = 0;
+	float totalWidth = 0.0f;
+
+	for (size_t i = 0; i < text.size(); ++i) {
+		ImVec2 charSize = ImGui::CalcTextSize(std::string(1, text[i]).c_str());
+		totalWidth += charSize.x;
+		if (totalWidth > availableWidth)
+			break;
+		clippedLen = i + 1;
+	}
+
+	if (clippedLen < text.size())
+		return text.substr(0, clippedLen) + ellipsis;
+	else
+		return text;
+}
+
 bool Core::ImGuiXtra::Button(const std::string& label, const glm::vec2& size, float deltaTime) {
 	ImGui::PushID(label.c_str());
 

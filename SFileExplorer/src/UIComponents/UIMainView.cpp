@@ -2,7 +2,7 @@
 #include "UIMenuBar.h"
 #include "UIQuickAccess.h"
 
-#include <iostream>
+#include <array>
 
 static Core::Window* s_window;
 static Core::sPtr<UIMenuBar> s_uiMenuBar;
@@ -13,14 +13,19 @@ static float* s_quickAccessWidth;
 static Core::sPtr<Core::Texture> s_directoryIcon;
 static Core::sPtr<Core::Texture> s_fileIcon;
 
+static constexpr float s_padding = 25.0f;
+
 extern bool g_updateFiles;
 
-static std::vector<glm::vec4> s_headerColors = {
-	{ 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 0.0f, 0.0f, 0.0f, 0.0f }
+static std::array<glm::vec4, 4> s_headerColors = {
+	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+	glm::vec4(0.0f, 0.0f, 0.0f, 0.0f)
 };
+
+static std::array<float, 4> s_columnPosition = { 0.0f };
+static std::array<float, 4> s_columnsWidth = { 0.0f };
 
 void UIMainView::Init() {
 	s_window = &Core::App::GetWindow();
@@ -58,17 +63,36 @@ void UIMainView::Update(float delta) {
 	
 	// Create table header for files
 	ImGui::BeginTable("FileTable", 4, ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_NoBordersInBody);
-	ImGui::TableSetupColumn(" Name");
+	ImGui::TableSetupColumn("Name");
 	ImGui::TableSetupColumn("Type");
 	ImGui::TableSetupColumn("Created Time");
 	ImGui::TableSetupColumn("Size");
 	
 	ImGui::TableHeadersRow();
 
+	// Get the cursor position
+	ImVec2 cursor = ImGui::GetMousePos();
+	// Handle animations for the header
 	for (int i = 0; i < ImGui::TableGetColumnCount(); i++) {
+		// Define each table index
 		ImGui::TableSetColumnIndex(i);
 		ImGui::TableHeader(ImGui::TableGetColumnName(i));
+		// Set their positions
+		s_columnPosition[i] = ImGui::GetCursorPosX();
+		s_columnsWidth[i] = ImGui::GetColumnWidth(i);
 		
+		// Get the normalized column position
+		float normalizedColumnPosition = s_columnPosition[i] + ImGui::GetWindowPos().x;
+
+		// Check if we're colliding with a resize control to change the cursor
+		if (cursor.x > normalizedColumnPosition + s_columnsWidth[i] - 1 && 
+			cursor.x < normalizedColumnPosition + s_columnsWidth[i] + 8 && 
+			cursor.y > ImGui::GetWindowPos().y + 1 && 
+			cursor.y < ImGui::GetWindowPos().y + 23) {
+			Core::System::SetCursor(Core::Cursor::HResize);
+		}
+
+		// Table header animation
 		if (ImGui::IsItemHovered()) {
 			auto color = Core::ImVecToGLM(Core::ImGuiXtra::HexColor(0xBA9EFF, 0.2f));
 			if (ImGui::IsItemActive()) {
@@ -80,23 +104,22 @@ void UIMainView::Update(float delta) {
 			s_headerColors[i] = Core::Math::Lerp(s_headerColors[i], {0, 0, 0, 0}, delta*10);
 		}
 
+		// Set the appropriate color based on the animation
 		ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, ImGui::ColorConvertFloat4ToU32(Core::GLMToImVec(s_headerColors[i])), i);
 	}
-
 	ImGui::EndTable();
 
+	// Display files
 	int i = 0;
 	bool selected = false;
 	for (const auto& file : *files) {
-		if(mainMenuIndex == i){
-			ImGui::PushStyleColor(ImGuiCol_Button, Core::ImGuiXtra::HexColor(0xBA9EFF, 0.2f));
-		}
-		else {
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 0.0f });
-		}
+		// If that particular index is selected permanently switch the button background
+		ImGui::PushStyleColor(ImGuiCol_Button, mainMenuIndex == i ? Core::ImGuiXtra::HexColor(0xBA9EFF, 0.2f) : ImVec4(0.0f, 0.0f, 0.0f, 0.0f ));
 
+		// Render the button
 		Core::ImGuiXtra::Button(("##" + file.name).c_str(), { s_window->GetWidth() - ImGui::GetStyle().WindowPadding.x, s_directoryIcon->height }, delta);
 		
+		// Handle selection logic
 		if (ImGui::IsItemHovered()) {
 			if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) || ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
 				mainMenuIndex = i;
@@ -120,11 +143,20 @@ void UIMainView::Update(float delta) {
 
 		ImGui::PopStyleColor();
 		ImGui::SameLine();
-
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() - s_window->GetWidth());
+		// Render the icons and text
+		
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() - s_window->GetWidth() + s_columnPosition[0]);
 		Core::ImGuiXtra::Image(file.isDirectory ? s_directoryIcon : s_fileIcon);
+		
 		ImGui::SameLine();
-		ImGui::Text(file.name.c_str());
+		std::string fileName = Core::ClipTextToWidth(file.name, s_columnsWidth[0] - s_padding);
+		ImGui::Text(fileName.c_str());
+
+		ImGui::SameLine();
+		ImGui::SetCursorPosX(s_columnPosition[1]);
+		std::string fileYypeDesc = Core::ClipTextToWidth(file.typeDesc, s_columnsWidth[1] - s_padding);
+		ImGui::Text(fileYypeDesc.c_str());
+
 		i++;
 	}
 	

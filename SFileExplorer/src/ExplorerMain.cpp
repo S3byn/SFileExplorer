@@ -12,7 +12,6 @@ static Core::sPtr<UIMenuBar> s_uiMenuBar;
 void ExplorerApp::AppStart() {
 	//Get IO
 	auto& io = ImGui::GetIO();
-static float posX = 0.0f;
 
 	#ifdef _DEBUG
 	io.IniFilename = nullptr;

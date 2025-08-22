@@ -12,6 +12,7 @@ namespace Core {
 	glm::vec2 ImVecToGLM(const ImVec2& vec);
 	glm::vec4 ImVecToGLM(const ImVec4& vec);
 	
+	std::string ClipTextToWidth(const std::string& text, float maxWidth, const char* ellipsis = "...");
 
 	namespace ImGuiXtra {
 
